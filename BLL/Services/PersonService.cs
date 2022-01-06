@@ -3,10 +3,8 @@ using BLL.Interfaces;
 using BLL.Models;
 using DAL.Entities;
 using DAL.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL.Services
@@ -37,6 +35,7 @@ namespace BLL.Services
             if(pToDelete != null)
             {
                 await _unitOfWork.PeopleRepository.DeleteByIdAsync(modelId);
+                await _unitOfWork.SaveAsync();
             }
         }
 
@@ -55,16 +54,21 @@ namespace BLL.Services
         public async Task<int> GetPersonPetCountAsync(int personId)
         {
             var pToCount = await _unitOfWork.PeopleRepository.GetByIdAsync(personId);
-            if (pToCount != null && pToCount.Pets != null)
+            if (pToCount != null)
             {
-                return pToCount.Pets.Count;
+                return _unitOfWork.PetRepository.FindAll().Where(x => x.PersonId == personId).ToList().Count;
             }
             return 0;
         }
 
-        public Task UpdateAsync(PersonModel model)
+        public async Task UpdateAsync(PersonModel model)
         {
-            throw new NotImplementedException();
+            var pExists = await _unitOfWork.PeopleRepository.GetByIdAsync(model.Id);
+            if(pExists != null)
+            {
+                _unitOfWork.PeopleRepository.Update(_mapper.Map<PersonModel, Person>(model));
+                await _unitOfWork.SaveAsync();
+            }
         }
     }
 }
