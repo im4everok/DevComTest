@@ -13,6 +13,10 @@ namespace DAL
         private readonly IPeopleContext _peopleDbContext;
         private IPeopleRepository _peopleRepository;
         private IPetRepository _petRepository;
+        public UnitOfWork(IPeopleContext peopleContext)
+        {
+            _peopleDbContext = peopleContext;
+        }
         public IPeopleRepository PeopleRepository
         {
             get
