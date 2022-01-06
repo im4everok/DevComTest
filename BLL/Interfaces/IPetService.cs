@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using BLL.Models;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BLL.Interfaces

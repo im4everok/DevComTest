@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BLL.Interfaces
+namespace BLL.Models
 {
     public class PersonModel
     {

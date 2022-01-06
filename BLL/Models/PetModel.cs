@@ -1,4 +1,4 @@
-﻿namespace BLL.Interfaces
+﻿namespace BLL.Models
 {
     public class PetModel
     {
