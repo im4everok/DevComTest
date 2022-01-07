@@ -3,6 +3,7 @@ using BLL.Interfaces;
 using BLL.Models;
 using DAL.Entities;
 using DAL.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,9 +40,9 @@ namespace BLL.Services
             }
         }
 
-        public IEnumerable<PersonModel> GetAll()
+        public IQueryable<PersonModel> GetAll()
         {
-            return _unitOfWork.PeopleRepository.FindAll().Select(x => _mapper.Map<Person, PersonModel>(x)).ToList();
+            return _unitOfWork.PeopleRepository.FindAll().Select(x => _mapper.Map<Person, PersonModel>(x));
         }
 
         public async Task<PersonModel> GetByIdAsync(int id)
@@ -49,6 +50,11 @@ namespace BLL.Services
             var pToGet = await _unitOfWork.PeopleRepository.GetByIdAsync(id);
             if (pToGet == null) return null;
             return _mapper.Map<Person, PersonModel>(pToGet);
+        }
+
+        public IQueryable<PersonModel> GetPeopleByName(string personName)
+        {
+            return GetAll().Where(p => p.Name.Equals(personName, StringComparison.OrdinalIgnoreCase));
         }
 
         public async Task<int> GetPersonPetCountAsync(int personId)

@@ -42,9 +42,9 @@ namespace BLL.Services
             }
         }
 
-        public IEnumerable<PetModel> GetAll()
+        public IQueryable<PetModel> GetAll()
         {
-            return _unitOfWork.PetRepository.FindAll().Select(x => _mapper.Map<Pet, PetModel>(x)).ToList();
+            return _unitOfWork.PetRepository.FindAll().Select(x => _mapper.Map<Pet, PetModel>(x));
         }
 
         public async Task<PetModel> GetByIdAsync(int id)

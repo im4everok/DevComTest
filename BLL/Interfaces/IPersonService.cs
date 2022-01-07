@@ -7,5 +7,6 @@ namespace BLL.Interfaces
     public interface IPersonService : ICrud<PersonModel>
     {
         Task<int> GetPersonPetCountAsync(int personId);
+        IQueryable<PersonModel> GetPeopleByName(string personName);
     }
 }
