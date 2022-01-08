@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
-    public interface IPersonService : ICrud<PersonModel>
+    public interface IPersonService : ICrud<PersonDto>
     {
+        Task AddPetToPersonAsync(int ownerId, PetDto model);
         Task<int> GetPersonPetCountAsync(int personId);
-        IQueryable<PersonModel> GetPeopleByName(string personName);
+        IQueryable<PersonDto> GetPeopleByName(string personName);
     }
 }

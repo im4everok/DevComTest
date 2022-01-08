@@ -27,18 +27,18 @@ namespace Dev.Controllers
             int pageNum = page ?? 1;
             if (string.IsNullOrEmpty(searchString))
             {
-                IPagedList<PersonModel> pAllPaged = _personService.GetAll().ToList().ToPagedList(pageNum, pageSize);
+                IPagedList<PersonDto> pAllPaged = _personService.GetAll().ToList().ToPagedList(pageNum, pageSize);
                 return View(pAllPaged);
             }
-            IPagedList<PersonModel> pAllPagedFiltered = _personService.GetPeopleByName(searchString).ToPagedList();
+            IPagedList<PersonDto> pAllPagedFiltered = _personService.GetPeopleByName(searchString).ToPagedList();
             return View(pAllPagedFiltered);
         }
 
         // GET: PersonController/Details/5
         [HttpGet]
-        public async Task<ActionResult> Details(int id)
+        public async Task<ActionResult> Details(int ownerId)
         {
-            return View(await _personService.GetByIdAsync(id));
+            return View(await _personService.GetByIdAsync(ownerId));
         }
 
         // GET: PersonController/Create
@@ -49,7 +49,7 @@ namespace Dev.Controllers
 
         // POST: PersonController/Create
         [HttpPost]
-        public async Task<ActionResult> Create(PersonModel model)
+        public async Task<ActionResult> Create(PersonDto model)
         {
             await _personService.AddAsync(model);
             return RedirectToAction("AllUsers");
@@ -79,13 +79,12 @@ namespace Dev.Controllers
         [HttpGet]
         public async Task<ActionResult> Delete(int id)
         {
-            var p = await _personService.GetByIdAsync(id);
             return View(await _personService.GetByIdAsync(id));
         }
 
         // POST: PersonController/Delete/5
         [HttpPost]
-        public async Task<ActionResult> Delete(int id, PersonModel person)
+        public async Task<ActionResult> Delete(int id, PersonDto person)
         {
             try
             {

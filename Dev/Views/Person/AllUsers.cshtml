@@ -3,7 +3,7 @@
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
 @using X.PagedList.Web.Common;
-@model IPagedList<PersonModel>;
+@model IPagedList<PersonDto>;
 @inject IPersonService PersonService;
 
 @{
@@ -39,15 +39,12 @@
                 {
                     <tr>
                         <td>
-                            @Html.ActionLink(p.Name, "Details", "Person", new { id = p.Id })
+                            @Html.ActionLink(p.Name, "Details", "Person", new { ownerId = p.Id })
                         </td>
                         <td>
                             @await PersonService.GetPersonPetCountAsync(p.Id)
                             @Html.ActionLink("Delete", "Delete", "Person", new { id = p.Id }, new { @class = "float-right btn btn-secondary" })
                         </td>
-                        @*<td>
-                                @Html.ActionLink("Delete", "Delete", "Person", new { id = p.Id})
-                            </td>*@
                     </tr>
                 }
             }

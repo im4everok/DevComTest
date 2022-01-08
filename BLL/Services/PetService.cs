@@ -21,7 +21,7 @@ namespace BLL.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task AddAsync(PetModel model)
+        public async Task AddAsync(PetDto model)
         {
             var petToCheck = _unitOfWork.PetRepository
                 .FindAll()
@@ -30,7 +30,7 @@ namespace BLL.Services
             bool notDuplicate = petToCheck is null;
             if (notDuplicate)
             {
-                await _unitOfWork.PetRepository.AddAsync(_mapper.Map<PetModel, Pet>(model));
+                await _unitOfWork.PetRepository.AddAsync(_mapper.Map<PetDto, Pet>(model));
                 await _unitOfWork.SaveAsync();
             }
         }
@@ -45,27 +45,27 @@ namespace BLL.Services
             }
         }
 
-        public IQueryable<PetModel> GetAll()
+        public IQueryable<PetDto> GetAll()
         {
-            return _unitOfWork.PetRepository.FindAll().Select(x => _mapper.Map<Pet, PetModel>(x));
+            return _unitOfWork.PetRepository.FindAll().Select(x => _mapper.Map<Pet, PetDto>(x));
         }
 
-        public async Task<PetModel> GetByIdAsync(int id)
+        public async Task<PetDto> GetByIdAsync(int id)
         {
             var toRet = await _unitOfWork.PetRepository.GetByIdAsync(id);
-            return _mapper.Map<Pet, PetModel>(toRet);
+            return _mapper.Map<Pet, PetDto>(toRet);
         }
 
-        public IQueryable<PetModel> GetUserPets(int userId)
+        public IQueryable<PetDto> GetUserPets(int userId)
         {
             IQueryable<Pet> userPets = _unitOfWork.PetRepository.FindAll()
                 .Where(x => x.PersonId == userId);
-            return userPets.Select(x => _mapper.Map<Pet, PetModel>(x));
+            return userPets.Select(x => _mapper.Map<Pet, PetDto>(x));
         }
 
-        public async Task UpdateAsync(PetModel model)
+        public async Task UpdateAsync(PetDto model)
         {
-            _unitOfWork.PetRepository.Update(_mapper.Map<PetModel, Pet>(model));
+            _unitOfWork.PetRepository.Update(_mapper.Map<PetDto, Pet>(model));
             await _unitOfWork.SaveAsync();
         }
     }

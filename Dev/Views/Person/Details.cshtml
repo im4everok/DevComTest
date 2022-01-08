@@ -1,5 +1,5 @@
 ﻿@using BLL.Interfaces;
-@model BLL.Models.PersonModel;
+@model BLL.Models.PersonDto;
 @inject IPetService PetService;
 
 @{
@@ -24,7 +24,10 @@
                     if (pet != null)
                     {
                         <tr>
-                            <td>@pet.Name</td>
+                            <td>
+                                @pet.Name
+                                @Html.ActionLink("Delete", "Delete", "Pet", new { petId = pet.Id, ownerId = Model.Id}, new { @class = "btn btn-danger float-right"})
+                            </td>
                         </tr>
                     }
                 }

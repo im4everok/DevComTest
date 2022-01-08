@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace BLL.Interfaces
 {
-    public interface IPetService : ICrud<PetModel>
+    public interface IPetService : ICrud<PetDto>
     {
-        IQueryable<PetModel> GetUserPets(int userId);
+        IQueryable<PetDto> GetUserPets(int userId);
     }
 }

@@ -1,4 +1,4 @@
-﻿@model BLL.Models.PersonModel;
+﻿@model BLL.Models.PersonDto;
 @using X.PagedList.Mvc.Core;
 @{
     ViewData["Title"] = "Delete pet owner";
@@ -16,12 +16,6 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
     </dl>
-    @*@using (Html.BeginForm("Delete", "Person", FormMethod.Post))
-    {
-        @Html.HiddenFor(x => x.Id);
-        @Html.ActionLink("Delete", "Delete", "Person", new { id = Model.Id}, new { @class ="btn btn-danger"});
-        @Html.ActionLink("Back to all users", "AllUsers", "Person", null, new { @class = "btn btn-primary"})
-    }*@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" />

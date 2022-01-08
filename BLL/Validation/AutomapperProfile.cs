@@ -8,9 +8,9 @@ namespace BLL.Validation
     {
         public AutomapperProfile()
         {
-            CreateMap<Person, PersonModel>().ReverseMap();
+            CreateMap<Person, PersonDto>().ReverseMap();
 
-            CreateMap<Pet, PetModel>().
+            CreateMap<Pet, PetDto>().
                 ForMember(p => p.PersonName, p2 => p2.MapFrom(src => src.Person.Name))
                 .ReverseMap();
         }

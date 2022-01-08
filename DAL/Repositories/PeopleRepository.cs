@@ -1,9 +1,6 @@
 ﻿using DAL.Entities;
 using DAL.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DAL.Repositories
@@ -38,7 +35,6 @@ namespace DAL.Repositories
 
         public async Task<Person> GetByIdAsync(int id)
         {
-            var p = await _peopleDbContext.Set<Person>().FindAsync(id);
             return await _peopleDbContext.Set<Person>().FindAsync(id);
         }
 

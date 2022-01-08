@@ -2,10 +2,10 @@
 
 namespace BLL.Models
 {
-    public class PersonModel
+    public class PersonDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<PetModel> Pets { get; set; }
+        public List<PetDto> Pets { get; set; }
     }
 }
