@@ -36,7 +36,9 @@ namespace BLL.Services
             if(pToDelete != null)
             {
                 await _unitOfWork.PeopleRepository.DeleteByIdAsync(modelId);
+                var f = _unitOfWork.PeopleRepository.FindAll();
                 await _unitOfWork.SaveAsync();
+                var p = _unitOfWork.PeopleRepository.FindAll();
             }
         }
 

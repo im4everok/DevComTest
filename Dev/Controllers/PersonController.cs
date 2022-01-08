@@ -76,18 +76,21 @@ namespace Dev.Controllers
         }
 
         // GET: PersonController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpGet]
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            var p = await _personService.GetByIdAsync(id);
+            return View(await _personService.GetByIdAsync(id));
         }
 
         // POST: PersonController/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, PersonModel person)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _personService.DeleteByIdAsync(id);
+                return RedirectToAction("AllUsers");
             }
             catch
             {

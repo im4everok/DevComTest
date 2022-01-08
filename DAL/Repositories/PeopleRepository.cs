@@ -27,9 +27,8 @@ namespace DAL.Repositories
 
         public async Task DeleteByIdAsync(int id)
         {
-            var person = _peopleDbContext.Set<Person>().Find(id);
+            var person = await _peopleDbContext.Set<Person>().FindAsync(id);
             _peopleDbContext.Set<Person>().Remove(person);
-            await _peopleDbContext.SaveChangesAsync();
         }
 
         public IQueryable<Person> FindAll()
