@@ -1,0 +1,38 @@
+﻿@using BLL.Interfaces;
+@model BLL.Models.PersonModel;
+@inject IPetService PetService;
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@string.Concat(Model.Name, "'s pets")</h1>
+
+<div class="align-content-center">
+    <hr />
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var userPets = PetService.GetUserPets(Model.Id).ToList();
+                foreach (var pet in userPets)
+                {
+                    if (pet != null)
+                    {
+                        <tr>
+                            <td>@pet.Name</td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    @Html.ActionLink("Back to all users", "AllUsers", "Person")
+</div>

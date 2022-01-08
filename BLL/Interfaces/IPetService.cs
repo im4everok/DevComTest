@@ -1,10 +1,11 @@
 ﻿using BLL.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BLL.Interfaces
 {
     public interface IPetService : ICrud<PetModel>
     {
-        IEnumerable<PetModel> GetUserPets(int userId);
+        IQueryable<PetModel> GetUserPets(int userId);
     }
 }

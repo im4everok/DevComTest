@@ -6,6 +6,6 @@ namespace BLL.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<PetModel> Pets { get; set; }
+        public List<PetModel> Pets { get; set; }
     }
 }

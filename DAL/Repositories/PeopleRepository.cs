@@ -39,6 +39,7 @@ namespace DAL.Repositories
 
         public async Task<Person> GetByIdAsync(int id)
         {
+            var p = await _peopleDbContext.Set<Person>().FindAsync(id);
             return await _peopleDbContext.Set<Person>().FindAsync(id);
         }
 

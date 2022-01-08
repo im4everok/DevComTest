@@ -10,7 +10,9 @@ namespace BLL.Validation
         {
             CreateMap<Person, PersonModel>().ReverseMap();
 
-            CreateMap<Pet, PetModel>().ReverseMap();
+            CreateMap<Pet, PetModel>().
+                ForMember(p => p.PersonName, p2 => p2.MapFrom(src => src.Person.Name))
+                .ReverseMap();
         }
     }
 }

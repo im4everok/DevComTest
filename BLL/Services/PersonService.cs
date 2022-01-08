@@ -42,7 +42,8 @@ namespace BLL.Services
 
         public IQueryable<PersonModel> GetAll()
         {
-            return _unitOfWork.PeopleRepository.FindAll().Select(x => _mapper.Map<Person, PersonModel>(x));
+            return _unitOfWork.PeopleRepository.FindAll()
+                .Select(x => _mapper.Map<Person, PersonModel>(x));
         }
 
         public async Task<PersonModel> GetByIdAsync(int id)
@@ -54,7 +55,9 @@ namespace BLL.Services
 
         public IQueryable<PersonModel> GetPeopleByName(string personName)
         {
-            return GetAll().Where(p => p.Name.Equals(personName, StringComparison.OrdinalIgnoreCase));
+            return _unitOfWork.PeopleRepository.FindAll()
+                .Where(p => p.Name.ToLower() == personName.ToLower())
+                .Select(x => _mapper.Map<Person, PersonModel>(x));
         }
 
         public async Task<int> GetPersonPetCountAsync(int personId)
@@ -62,7 +65,10 @@ namespace BLL.Services
             var pToCount = await _unitOfWork.PeopleRepository.GetByIdAsync(personId);
             if (pToCount != null)
             {
-                return _unitOfWork.PetRepository.FindAll().Where(x => x.PersonId == personId).ToList().Count;
+                return _unitOfWork.PetRepository.FindAll()
+                    .Where(x => x.PersonId == personId)
+                    .ToList()
+                    .Count;
             }
             return 0;
         }

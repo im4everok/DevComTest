@@ -23,8 +23,11 @@ namespace BLL.Services
         }
         public async Task AddAsync(PetModel model)
         {
-            bool notDuplicate = _unitOfWork.PetRepository.FindAll()
-                .FirstOrDefault(x => x.Name.Equals(model.Name, StringComparison.OrdinalIgnoreCase)) == null;
+            var petToCheck = _unitOfWork.PetRepository
+                .FindAll()
+                .FirstOrDefault(x => x.Name.ToLower() == model.Name.ToLower());
+
+            bool notDuplicate = petToCheck is null;
             if (notDuplicate)
             {
                 await _unitOfWork.PetRepository.AddAsync(_mapper.Map<PetModel, Pet>(model));
@@ -53,10 +56,11 @@ namespace BLL.Services
             return _mapper.Map<Pet, PetModel>(toRet);
         }
 
-        public IEnumerable<PetModel> GetUserPets(int userId)
+        public IQueryable<PetModel> GetUserPets(int userId)
         {
-            IQueryable<Pet> userPets = _unitOfWork.PetRepository.FindAll().Where(x => x.PersonId == userId);
-            return userPets.Select(x => _mapper.Map<Pet, PetModel>(x)).ToList();
+            IQueryable<Pet> userPets = _unitOfWork.PetRepository.FindAll()
+                .Where(x => x.PersonId == userId);
+            return userPets.Select(x => _mapper.Map<Pet, PetModel>(x));
         }
 
         public async Task UpdateAsync(PetModel model)
