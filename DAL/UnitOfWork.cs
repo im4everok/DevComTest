@@ -1,9 +1,5 @@
 ﻿using DAL.Interfaces;
 using DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DAL
@@ -11,19 +7,19 @@ namespace DAL
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IPeopleContext _peopleDbContext;
-        private IPeopleRepository _peopleRepository;
+        private IPersonRepository _peopleRepository;
         private IPetRepository _petRepository;
         public UnitOfWork(IPeopleContext peopleContext)
         {
             _peopleDbContext = peopleContext;
         }
-        public IPeopleRepository PeopleRepository
+        public IPersonRepository PeopleRepository
         {
             get
             {
                 if(_peopleRepository == null)
                 {
-                    _peopleRepository = new PeopleRepository(_peopleDbContext);
+                    _peopleRepository = new PersonRepository(_peopleDbContext);
                 }
                 return _peopleRepository;
             }

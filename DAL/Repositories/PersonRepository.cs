@@ -1,14 +1,15 @@
 ﻿using DAL.Entities;
 using DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class PeopleRepository : IPeopleRepository
+    public class PersonRepository : IPersonRepository
     {
         private readonly IPeopleContext _peopleDbContext;
-        public PeopleRepository(IPeopleContext peopleDbContext)
+        public PersonRepository(IPeopleContext peopleDbContext)
         {
             _peopleDbContext = peopleDbContext;
         }
@@ -30,7 +31,7 @@ namespace DAL.Repositories
 
         public IQueryable<Person> FindAll()
         {
-            return _peopleDbContext.Set<Person>();
+            return _peopleDbContext.Set<Person>().Include(x => x.Pets);
         }
 
         public async Task<Person> GetByIdAsync(int id)

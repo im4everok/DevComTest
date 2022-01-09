@@ -3,10 +3,8 @@ using BLL.Interfaces;
 using BLL.Models;
 using DAL.Entities;
 using DAL.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL.Services
@@ -21,17 +19,38 @@ namespace BLL.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task AddAsync(PetDto model)
+        public async Task AddAsync(PetDto model, int ownerId)
         {
-            var petToCheck = _unitOfWork.PetRepository
-                .FindAll()
-                .FirstOrDefault(x => x.Name.ToLower() == model.Name.ToLower());
-
-            bool notDuplicate = petToCheck is null;
-            if (notDuplicate)
+            var owner = await _unitOfWork.PeopleRepository.GetByIdAsync(ownerId);
+            var ownerExists = owner != null;
+            if (!string.IsNullOrEmpty(model.Name) && ownerExists)
             {
-                await _unitOfWork.PetRepository.AddAsync(_mapper.Map<PetDto, Pet>(model));
-                await _unitOfWork.SaveAsync();
+                //Depends whether you want to have ability to add pets
+                //with the same names to different owners
+                //var petToCheck = _unitOfWork.PetRepository
+                //.FindAll()                                              
+                //.FirstOrDefault(x => x.Name.ToLower() == model.Name.ToLower());
+
+                bool notDuplicate = true; /*petToCheck is null;*/
+                if (notDuplicate)
+                {
+                    var mappedPet = _mapper.Map<PetDto, Pet>(model);
+
+                    mappedPet.PersonId = ownerId;
+                    mappedPet.Person = owner;
+                    if(owner.Pets == null)
+                    {
+                        owner.Pets = new List<Pet> { mappedPet };
+                    }
+                    else
+                    {
+                        owner.Pets.Add(mappedPet);
+                        await _unitOfWork.SaveAsync();
+                    }
+                    _unitOfWork.PeopleRepository.Update(owner);
+                    await _unitOfWork.PetRepository.AddAsync(mappedPet);
+                    await _unitOfWork.SaveAsync();
+                }
             }
         }
 
@@ -60,6 +79,13 @@ namespace BLL.Services
         {
             IQueryable<Pet> userPets = _unitOfWork.PetRepository.FindAll()
                 .Where(x => x.PersonId == userId);
+            return userPets.Select(x => _mapper.Map<Pet, PetDto>(x));
+        }
+
+        public IQueryable<PetDto> GetUserPetsByPetName(int userId, string name)
+        {
+            IQueryable<Pet> userPets = _unitOfWork.PetRepository.FindAll()
+                .Where(x => x.PersonId == userId && x.Name == name);
             return userPets.Select(x => _mapper.Map<Pet, PetDto>(x));
         }
 

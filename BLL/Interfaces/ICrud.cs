@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 
 namespace BLL.Interfaces
@@ -10,7 +7,6 @@ namespace BLL.Interfaces
     {
         IQueryable<TModel> GetAll();
         Task<TModel> GetByIdAsync(int id);
-        Task AddAsync(TModel model);
         Task UpdateAsync(TModel model);
         Task DeleteByIdAsync(int modelId);
     }

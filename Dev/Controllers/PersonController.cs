@@ -3,10 +3,7 @@ using BLL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using X.PagedList;
-using X.PagedList.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Dev.Controllers
@@ -21,13 +18,13 @@ namespace Dev.Controllers
             _petService = petService;
         }
         // GET: PersonController
-        public ActionResult AllUsers(string searchString, int? page)
+        public async Task<ActionResult> AllUsers(string searchString, int? page)
         {
             int pageSize = 3;
             int pageNum = page ?? 1;
             if (string.IsNullOrEmpty(searchString))
             {
-                IPagedList<PersonDto> pAllPaged = _personService.GetAll().ToList().ToPagedList(pageNum, pageSize);
+                IPagedList<PersonDto> pAllPaged = await _personService.GetAll().ToPagedListAsync(pageNum, pageSize);
                 return View(pAllPaged);
             }
             IPagedList<PersonDto> pAllPagedFiltered = _personService.GetPeopleByName(searchString).ToPagedList();
@@ -36,9 +33,17 @@ namespace Dev.Controllers
 
         // GET: PersonController/Details/5
         [HttpGet]
-        public async Task<ActionResult> Details(int ownerId)
+        public async Task<ActionResult> Details([FromQuery]int ownerId, string searchString, int? page)
         {
-            return View(await _personService.GetByIdAsync(ownerId));
+            int pageSize = 3;
+            int pageNum = page ?? 1;
+            ViewBag.ownerId = ownerId;
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                return View(await _petService.GetUserPetsByPetName(ownerId, searchString).ToPagedListAsync(pageNum, pageSize));
+            }
+            return View(await _petService.GetUserPets(ownerId).ToPagedListAsync(pageNum, pageSize));
+            //return View(await _personService.GetByIdAsync(ownerId));
         }
 
         // GET: PersonController/Create
@@ -53,26 +58,6 @@ namespace Dev.Controllers
         {
             await _personService.AddAsync(model);
             return RedirectToAction("AllUsers");
-        }
-
-        // GET: PersonController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: PersonController/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         // GET: PersonController/Delete/5

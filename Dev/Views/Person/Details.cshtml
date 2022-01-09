@@ -1,12 +1,36 @@
 ﻿@using BLL.Interfaces;
-@model BLL.Models.PersonDto;
-@inject IPetService PetService;
+@using BLL.Models;
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
 
+@*@model BLL.Models.PersonDto;*@
+@model IPagedList<PetDto>;
+@inject IPetService PetService;
+@inject IPersonService PersonService;
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>@string.Concat(Model.Name, "'s pets")</h1>
+<h1 class="text-center">@string.Concat(PersonService.GetByIdAsync((int)ViewBag.ownerId).Result?.Name, "'s pets")</h1>
+
+<u>@Html.ActionLink("Back to all users", "AllUsers", "Person")</u>
+<br />
+
+<form asp-action="Details" 
+      asp-route-ownerId=@ViewBag.ownerId
+      method="get">
+    <div class="form-actions no-color">
+        <p>
+            <input type="hidden" name="ownerId" value="@ViewBag.ownerId" />
+            Search: <input type="text" name="SearchString" />
+            <input type="submit" value="Search" class="btn btn-default" />
+            @Html.ActionLink("back to full list", "Details", "Person", new { ownerId = ViewBag.ownerId })
+            @Html.ActionLink("Add", "Create", "Pet", new { ownerId = ViewBag.ownerId }, new { @class = "btn btn-primary m-lg-2" })
+        </p>
+    </div>
+</form>
+
 
 <div class="align-content-center">
     <hr />
@@ -18,15 +42,14 @@
         </thead>
         <tbody>
             @{
-                var userPets = PetService.GetUserPets(Model.Id).ToList();
-                foreach (var pet in userPets)
+                foreach (var pet in Model)
                 {
                     if (pet != null)
                     {
                         <tr>
                             <td>
                                 @pet.Name
-                                @Html.ActionLink("Delete", "Delete", "Pet", new { petId = pet.Id, ownerId = Model.Id}, new { @class = "btn btn-danger float-right"})
+                                @Html.ActionLink("Delete", "Delete", "Pet", new { petId = pet.Id, ownerId = ViewBag.ownerId }, new { @class = "btn btn-danger float-right" })
                             </td>
                         </tr>
                     }
@@ -35,7 +58,7 @@
         </tbody>
     </table>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    @Html.ActionLink("Back to all users", "AllUsers", "Person")
-</div>
+@Html.PagedListPager(Model, page => Url.Action("Details", "Person", new {ownerId = ViewBag.ownerId, searchString = "", page }), new PagedListRenderOptions
+{
+    LiElementClasses = new string[] { "page-link" }
+})

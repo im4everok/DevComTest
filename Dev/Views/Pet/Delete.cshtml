@@ -18,7 +18,6 @@
             @Html.DisplayFor(model => model.Pet.Name)
         </dd>
     </dl>
-    @*@Html.ActionLink("Delete", "Delete", "Pet", new { pet = Model.Pet, ownerId = Model.Owner.Id }, new { @class = "btn btn-danger" })*@
 <form asp-controller="Pet"
       asp-action="Delete"
       asp-route-petId=@Model.Pet.Id

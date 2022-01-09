@@ -3,9 +3,6 @@ using BLL.Models;
 using Dev.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Dev.Controllers
@@ -20,51 +17,23 @@ namespace Dev.Controllers
             _petService = petService;
             _personService = personService;
         }
-        // GET: PetController
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: PetController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
         // GET: PetController/Create
-        public ActionResult Create()
+        public ActionResult Create(int ownerId)
         {
-            return View();
+            PetModel petToGetOwnerId = new PetModel { Owner = new PersonDto { Id = ownerId } , Pet = new PetDto { Name = ""}};
+            return View(petToGetOwnerId);
         }
 
         // POST: PetController/Create
         [HttpPost]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(PetModel petToGet, int ownerId)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: PetController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: PetController/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+                var petFromModel = new PetDto { Name = petToGet.Pet.Name };
+                await _petService.AddAsync(petFromModel, ownerId);
+                return RedirectToAction("Details", "Person", new { ownerId });
             }
             catch
             {
