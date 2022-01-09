@@ -41,12 +41,12 @@ namespace Dev.Controllers
 
         // POST: PetController/Create
         [HttpPost]
-        public ActionResult Create(PetModel petToGet, int ownerId)
+        public async Task<ActionResult> Create(PetModel petToGet, int ownerId)
         {
             try
             {
                 var petFromModel = new PetDto { Name = petToGet.Pet.Name };
-                _petService.AddAsync(petFromModel, ownerId);
+                await _petService.AddAsync(petFromModel, ownerId);
                 return RedirectToAction("Details", "Person", new { ownerId });
             }
             catch
