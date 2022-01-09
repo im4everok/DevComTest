@@ -18,13 +18,13 @@ namespace Dev.Controllers
             _petService = petService;
         }
         // GET: PersonController
-        public ActionResult AllUsers(string searchString, int? page)
+        public async Task<ActionResult> AllUsers(string searchString, int? page)
         {
             int pageSize = 3;
             int pageNum = page ?? 1;
             if (string.IsNullOrEmpty(searchString))
             {
-                IPagedList<PersonDto> pAllPaged = _personService.GetAll().ToPagedList(pageNum, pageSize);
+                IPagedList<PersonDto> pAllPaged = await _personService.GetAll().ToPagedListAsync(pageNum, pageSize);
                 return View(pAllPaged);
             }
             IPagedList<PersonDto> pAllPagedFiltered = _personService.GetPeopleByName(searchString).ToPagedList();
@@ -33,10 +33,16 @@ namespace Dev.Controllers
 
         // GET: PersonController/Details/5
         [HttpGet]
-        public async Task<ActionResult> Details(int ownerId, string searchString, int? page)
+        public async Task<ActionResult> Details([FromQuery]int ownerId, string searchString, int? page)
         {
-            ViewData["ownerId"] = ownerId;
-
+            int pageSize = 3;
+            int pageNum = page ?? 1;
+            ViewBag.ownerId = ownerId;
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                return View(await _petService.GetUserPetsByPetName(ownerId, searchString).ToPagedListAsync(pageNum, pageSize));
+            }
+            return View(await _petService.GetUserPets(ownerId).ToPagedListAsync(pageNum, pageSize));
             //return View(await _personService.GetByIdAsync(ownerId));
         }
 

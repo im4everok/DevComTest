@@ -7,22 +7,26 @@
 @*@model BLL.Models.PersonDto;*@
 @model IPagedList<PetDto>;
 @inject IPetService PetService;
-
+@inject IPersonService PersonService;
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1 class="text-center">@string.Concat(Model[0].PersonName, "'s pets")</h1>
+<h1 class="text-center">@string.Concat(PersonService.GetByIdAsync((int)ViewBag.ownerId).Result?.Name, "'s pets")</h1>
 
 <u>@Html.ActionLink("Back to all users", "AllUsers", "Person")</u>
 <br />
-<form asp-action="Details" method="get">
+
+<form asp-action="Details" 
+      asp-route-ownerId=@ViewBag.ownerId
+      method="get">
     <div class="form-actions no-color">
         <p>
-            Find by name: <input type="text" name="SearchString" />
+            <input type="hidden" name="ownerId" value="@ViewBag.ownerId" />
+            Search: <input type="text" name="SearchString" />
             <input type="submit" value="Search" class="btn btn-default" />
-            @Html.ActionLink("back to full list", "Details", "Person", new { ownerId = ViewData["ownerId"] })
-            @Html.ActionLink("Add", "Create", "Pet", new { ownerId = ViewData["ownerId"] }, new { @class = "btn btn-primary m-lg-2" })
+            @Html.ActionLink("back to full list", "Details", "Person", new { ownerId = ViewBag.ownerId })
+            @Html.ActionLink("Add", "Create", "Pet", new { ownerId = ViewBag.ownerId }, new { @class = "btn btn-primary m-lg-2" })
         </p>
     </div>
 </form>
@@ -38,15 +42,14 @@
         </thead>
         <tbody>
             @{
-                IPagedList<PetDto> userPets = PetService.GetUserPets(Model.Id).ToPagedList(1, 3);
-                foreach (var pet in userPets)
+                foreach (var pet in Model)
                 {
                     if (pet != null)
                     {
                         <tr>
                             <td>
                                 @pet.Name
-                                @Html.ActionLink("Delete", "Delete", "Pet", new { petId = pet.Id, ownerId = Model.Id }, new { @class = "btn btn-danger float-right" })
+                                @Html.ActionLink("Delete", "Delete", "Pet", new { petId = pet.Id, ownerId = ViewBag.ownerId }, new { @class = "btn btn-danger float-right" })
                             </td>
                         </tr>
                     }
@@ -55,4 +58,7 @@
         </tbody>
     </table>
 </div>
-
+@Html.PagedListPager(Model, page => Url.Action("Details", "Person", new {ownerId = ViewBag.ownerId, searchString = "", page }), new PagedListRenderOptions
+{
+    LiElementClasses = new string[] { "page-link" }
+})

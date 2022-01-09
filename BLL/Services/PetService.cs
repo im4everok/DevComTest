@@ -82,6 +82,13 @@ namespace BLL.Services
             return userPets.Select(x => _mapper.Map<Pet, PetDto>(x));
         }
 
+        public IQueryable<PetDto> GetUserPetsByPetName(int userId, string name)
+        {
+            IQueryable<Pet> userPets = _unitOfWork.PetRepository.FindAll()
+                .Where(x => x.PersonId == userId && x.Name == name);
+            return userPets.Select(x => _mapper.Map<Pet, PetDto>(x));
+        }
+
         public async Task UpdateAsync(PetDto model)
         {
             _unitOfWork.PetRepository.Update(_mapper.Map<PetDto, Pet>(model));

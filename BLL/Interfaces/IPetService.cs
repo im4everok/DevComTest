@@ -8,5 +8,6 @@ namespace BLL.Interfaces
     {
         Task AddAsync(PetDto model, int ownerId);
         IQueryable<PetDto> GetUserPets(int userId);
+        IQueryable<PetDto> GetUserPetsByPetName(int userId, string name);
     }
 }
