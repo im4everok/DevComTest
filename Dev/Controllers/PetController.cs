@@ -33,18 +33,21 @@ namespace Dev.Controllers
         }
 
         // GET: PetController/Create
-        public ActionResult Create()
+        public ActionResult Create(int ownerId)
         {
-            return View();
+            PetModel petToGetOwnerId = new PetModel { Owner = new PersonDto { Id = ownerId } , Pet = new PetDto { Name = ""}};
+            return View(petToGetOwnerId);
         }
 
         // POST: PetController/Create
         [HttpPost]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(PetModel petToGet, int ownerId)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var petFromModel = new PetDto { Name = petToGet.Pet.Name };
+                _petService.AddAsync(petFromModel, ownerId);
+                return RedirectToAction("Details", "Person", new { ownerId });
             }
             catch
             {

@@ -6,6 +6,6 @@ namespace BLL.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<PetDto> Pets { get; set; }
+        public List<int> PetsIds { get; set; }
     }
 }

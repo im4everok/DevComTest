@@ -27,7 +27,7 @@ namespace Dev.Controllers
             int pageNum = page ?? 1;
             if (string.IsNullOrEmpty(searchString))
             {
-                IPagedList<PersonDto> pAllPaged = _personService.GetAll().ToList().ToPagedList(pageNum, pageSize);
+                IPagedList<PersonDto> pAllPaged = _personService.GetAll().ToPagedList(pageNum, pageSize);
                 return View(pAllPaged);
             }
             IPagedList<PersonDto> pAllPagedFiltered = _personService.GetPeopleByName(searchString).ToPagedList();

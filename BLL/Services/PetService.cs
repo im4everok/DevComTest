@@ -21,17 +21,36 @@ namespace BLL.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task AddAsync(PetDto model)
+        public async Task AddAsync(PetDto model, int ownerId)
         {
-            var petToCheck = _unitOfWork.PetRepository
+            var owner = await _unitOfWork.PeopleRepository.GetByIdAsync(ownerId);
+            var ownerExists = owner != null;
+            if (!string.IsNullOrEmpty(model.Name) && ownerExists)
+            {
+                var petToCheck = _unitOfWork.PetRepository
                 .FindAll()
                 .FirstOrDefault(x => x.Name.ToLower() == model.Name.ToLower());
 
-            bool notDuplicate = petToCheck is null;
-            if (notDuplicate)
-            {
-                await _unitOfWork.PetRepository.AddAsync(_mapper.Map<PetDto, Pet>(model));
-                await _unitOfWork.SaveAsync();
+                bool notDuplicate = petToCheck is null;
+                if (notDuplicate)
+                {
+                    var mappedPet = _mapper.Map<PetDto, Pet>(model);
+
+                    mappedPet.PersonId = ownerId;
+                    mappedPet.Person = owner;
+                    if(owner.Pets == null)
+                    {
+                        owner.Pets = new List<Pet> { mappedPet };
+                    }
+                    else
+                    {
+                        owner.Pets.Add(mappedPet);
+                        await _unitOfWork.SaveAsync();
+                    }
+                    _unitOfWork.PeopleRepository.Update(owner);
+                    await _unitOfWork.PetRepository.AddAsync(mappedPet);
+                    await _unitOfWork.SaveAsync();
+                }
             }
         }
 

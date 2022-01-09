@@ -9,7 +9,7 @@ namespace DAL.Interfaces
 {
     public interface IUnitOfWork
     {
-        IPeopleRepository PeopleRepository { get; }
+        IPersonRepository PeopleRepository { get; }
         IPetRepository PetRepository { get; }
         Task<int> SaveAsync();
     }

@@ -6,7 +6,11 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>@string.Concat(Model.Name, "'s pets")</h1>
+<h1 class="text-center">@string.Concat(Model.Name, "'s pets")</h1>
+
+<u>@Html.ActionLink("Back to all users", "AllUsers", "Person")</u>
+
+@Html.ActionLink("Add", "Create", "Pet", new { ownerId = Model.Id}, new { @class = "btn btn-primary"})
 
 <div class="align-content-center">
     <hr />
@@ -26,7 +30,7 @@
                         <tr>
                             <td>
                                 @pet.Name
-                                @Html.ActionLink("Delete", "Delete", "Pet", new { petId = pet.Id, ownerId = Model.Id}, new { @class = "btn btn-danger float-right"})
+                                @Html.ActionLink("Delete", "Delete", "Pet", new { petId = pet.Id, ownerId = Model.Id }, new { @class = "btn btn-danger float-right" })
                             </td>
                         </tr>
                     }
@@ -34,8 +38,4 @@
             }
         </tbody>
     </table>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    @Html.ActionLink("Back to all users", "AllUsers", "Person")
 </div>
