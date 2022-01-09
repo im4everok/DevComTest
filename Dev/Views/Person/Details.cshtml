@@ -3,8 +3,8 @@
 @using X.PagedList;
 @using X.PagedList.Mvc.Core;
 @using X.PagedList.Web.Common;
+@using System.Linq;
 
-@*@model BLL.Models.PersonDto;*@
 @model IPagedList<PetDto>;
 @inject IPetService PetService;
 @inject IPersonService PersonService;
@@ -17,7 +17,7 @@
 <u>@Html.ActionLink("Back to all users", "AllUsers", "Person")</u>
 <br />
 
-<form asp-action="Details" 
+<form asp-action="Details"
       asp-route-ownerId=@ViewBag.ownerId
       method="get">
     <div class="form-actions no-color">
@@ -31,9 +31,11 @@
     </div>
 </form>
 
+<hr />
+<p>Total count: @PetService.GetUserPets((int)ViewBag.ownerId).ToList().Count</p>
 
 <div class="align-content-center">
-    <hr />
+
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -58,7 +60,7 @@
         </tbody>
     </table>
 </div>
-@Html.PagedListPager(Model, page => Url.Action("Details", "Person", new {ownerId = ViewBag.ownerId, searchString = "", page }), new PagedListRenderOptions
+@Html.PagedListPager(Model, page => Url.Action("Details", "Person", new { ownerId = ViewBag.ownerId, searchString = "", page }), new PagedListRenderOptions
 {
     LiElementClasses = new string[] { "page-link" }
 })
