@@ -15,7 +15,7 @@
 <form asp-action="AllUsers" method="get">
     <div class="form-actions no-color">
         <p>
-            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            Find by name: <input type="text" name="SearchString" />
             <input type="submit" value="Search" class="btn btn-default" />
             @Html.ActionLink("back to full list", "AllUsers", "Person")
             @Html.ActionLink("Add", "Create", "Person", null, new { @class = "btn btn-default btn-primary float-right" })

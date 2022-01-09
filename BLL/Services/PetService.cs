@@ -25,11 +25,13 @@ namespace BLL.Services
             var ownerExists = owner != null;
             if (!string.IsNullOrEmpty(model.Name) && ownerExists)
             {
-                var petToCheck = _unitOfWork.PetRepository
-                .FindAll()
-                .FirstOrDefault(x => x.Name.ToLower() == model.Name.ToLower());
+                //Depends whether you want to have ability to add pets
+                //with the same names to different owners
+                //var petToCheck = _unitOfWork.PetRepository
+                //.FindAll()                                              
+                //.FirstOrDefault(x => x.Name.ToLower() == model.Name.ToLower());
 
-                bool notDuplicate = petToCheck is null;
+                bool notDuplicate = true; /*petToCheck is null;*/
                 if (notDuplicate)
                 {
                     var mappedPet = _mapper.Map<PetDto, Pet>(model);

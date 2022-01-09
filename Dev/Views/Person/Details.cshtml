@@ -1,16 +1,32 @@
 ﻿@using BLL.Interfaces;
-@model BLL.Models.PersonDto;
+@using BLL.Models;
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
+
+@*@model BLL.Models.PersonDto;*@
+@model IPagedList<PetDto>;
 @inject IPetService PetService;
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1 class="text-center">@string.Concat(Model.Name, "'s pets")</h1>
+<h1 class="text-center">@string.Concat(Model[0].PersonName, "'s pets")</h1>
 
 <u>@Html.ActionLink("Back to all users", "AllUsers", "Person")</u>
+<br />
+<form asp-action="Details" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by name: <input type="text" name="SearchString" />
+            <input type="submit" value="Search" class="btn btn-default" />
+            @Html.ActionLink("back to full list", "Details", "Person", new { ownerId = ViewData["ownerId"] })
+            @Html.ActionLink("Add", "Create", "Pet", new { ownerId = ViewData["ownerId"] }, new { @class = "btn btn-primary m-lg-2" })
+        </p>
+    </div>
+</form>
 
-@Html.ActionLink("Add", "Create", "Pet", new { ownerId = Model.Id}, new { @class = "btn btn-primary"})
 
 <div class="align-content-center">
     <hr />
@@ -22,7 +38,7 @@
         </thead>
         <tbody>
             @{
-                var userPets = PetService.GetUserPets(Model.Id).ToList();
+                IPagedList<PetDto> userPets = PetService.GetUserPets(Model.Id).ToPagedList(1, 3);
                 foreach (var pet in userPets)
                 {
                     if (pet != null)
@@ -39,3 +55,4 @@
         </tbody>
     </table>
 </div>
+

@@ -17,17 +17,6 @@ namespace Dev.Controllers
             _petService = petService;
             _personService = personService;
         }
-        // GET: PetController
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: PetController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
         // GET: PetController/Create
         public ActionResult Create(int ownerId)
@@ -45,26 +34,6 @@ namespace Dev.Controllers
                 var petFromModel = new PetDto { Name = petToGet.Pet.Name };
                 await _petService.AddAsync(petFromModel, ownerId);
                 return RedirectToAction("Details", "Person", new { ownerId });
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: PetController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: PetController/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
             }
             catch
             {

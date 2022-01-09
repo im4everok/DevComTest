@@ -33,9 +33,11 @@ namespace Dev.Controllers
 
         // GET: PersonController/Details/5
         [HttpGet]
-        public async Task<ActionResult> Details(int ownerId)
+        public async Task<ActionResult> Details(int ownerId, string searchString, int? page)
         {
-            return View(await _personService.GetByIdAsync(ownerId));
+            ViewData["ownerId"] = ownerId;
+
+            //return View(await _personService.GetByIdAsync(ownerId));
         }
 
         // GET: PersonController/Create
@@ -50,26 +52,6 @@ namespace Dev.Controllers
         {
             await _personService.AddAsync(model);
             return RedirectToAction("AllUsers");
-        }
-
-        // GET: PersonController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: PersonController/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
 
         // GET: PersonController/Delete/5
